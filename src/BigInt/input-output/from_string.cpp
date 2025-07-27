@@ -38,7 +38,9 @@ BigInt::BigInt(const std::string &str)
          carry = tmp >> 64;
          d = static_cast<u_int64_t>(tmp);
       }
-      this->digits.push_back(carry);
+      if (carry)
+      {
+         this->digits.push_back(carry);
+      }
    }
-   digits.pop_back();
 }

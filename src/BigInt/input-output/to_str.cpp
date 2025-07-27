@@ -1,7 +1,7 @@
 #include "BigInt.hpp"
-
+#include "iostream"
 constexpr u_int64_t magic = 0xCCCCCCCCCCCCCCCD;
-constexpr u_int64_t DEC_BASE = 1e18;
+constexpr u_int64_t TEN18 = 1e18;
 
 constexpr inline void fast_to_char(u_int64_t &n, char *buf)
 {
@@ -19,6 +19,7 @@ std::string BigInt::to_str() const
 
    std::vector<u_int64_t> temp(digits);
    std::vector<u_int64_t> chunks;
+
    u_int64_t *tmp_data = temp.data();
 
    size_t tmp_len = temp.size();
@@ -31,8 +32,8 @@ std::string BigInt::to_str() const
       for (int i = tmp_len - 1; i >= 0; --i)
       {
          __uint128_t cur = (__uint128_t(rem) << 64 | tmp_data[i]);
-         tmp_data[i] = static_cast<u_int64_t>(cur / DEC_BASE);
-         rem = static_cast<u_int64_t>(cur - tmp_data[i] * DEC_BASE);
+         tmp_data[i] = static_cast<u_int64_t>(cur / TEN18);
+         rem = static_cast<u_int64_t>(cur - tmp_data[i] * TEN18);
       }
 
       chunks.push_back(rem);
@@ -40,6 +41,7 @@ std::string BigInt::to_str() const
       while (!temp.empty() && temp.back() == 0)
       {
          temp.pop_back();
+         tmp_len--;
       }
       tmp_data = temp.data();
    }
@@ -47,7 +49,8 @@ std::string BigInt::to_str() const
    tmp_data = chunks.data();
    tmp_len = chunks.size();
 
-   std::string result = std::to_string(chunks.back());
+   std::string result =
+       static_cast<char>(45 & -this->is_negative) + std::to_string(tmp_data[tmp_len - 1]);
 
    result.reserve(tmp_len * 18 - 1);
 

@@ -6,8 +6,9 @@
 class BigInt
 {
  private:
- public:
    bool is_negative{};
+
+ public:
    std::vector<u_int64_t> digits;
    BigInt(const int64_t s);
    BigInt(const std::string &);
@@ -19,6 +20,10 @@ class BigInt
    std::string to_vec() const;
 
    friend BigInt &operator+=(BigInt &, const BigInt &);
-
    friend BigInt operator+(const BigInt &, const BigInt &);
+
+   friend BigInt &operator-=(BigInt &, const BigInt &);
+   friend BigInt operator-(const BigInt &, const BigInt &);
+
+   BigInt &operator=(const BigInt &) noexcept = default;
 };
