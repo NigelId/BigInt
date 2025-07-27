@@ -1,6 +1,8 @@
 #include "BigInt.hpp"
 
-inline u_int64_t parse_18(const char *slice, size_t len)
+const u_int64_t TEN18 = 1000000000000000000ULL;
+
+constexpr inline u_int64_t parse_18(const char *slice, size_t len)
 {
    u_int64_t res{};
    for (size_t i{}; i < len; i++)
@@ -12,31 +14,31 @@ inline u_int64_t parse_18(const char *slice, size_t len)
 
 BigInt::BigInt(const std::string &str)
 {
-   const char *str_data = str.data();
+   this->is_negative = (str[0] == '-');
 
-   const size_t strlen = (str.length());
+   const char *data = str.data() + this->is_negative;
 
-   this->is_negative = (str_data[0] == '-');
+   size_t len = str.length() - this->is_negative;
 
-   this->digits.reserve(strlen / 18 + 2);
+   size_t rem = (len - 1) % 18 + 1;
 
-   this->digits.push_back(0);
+   u_int64_t carry = parse_18(data, rem);
 
-   constexpr u_int64_t TEN18 = 1e18;
+   this->digits.reserve(len / 18 + 2);
 
-   for (size_t i = this->is_negative; i < strlen; i += 18)
+   this->digits.push_back(carry);
+
+   for (size_t i = rem; i < len; i += 18)
    {
-      u_int64_t carry = parse_18(str_data + i, std::min<u_int64_t>(strlen - i, 18));
+      carry = parse_18(data + i, 18);
 
-      for (u_int64_t &limb : this->digits)
+      for (u_int64_t &d : this->digits)
       {
-         __uint128_t scratch = static_cast<__uint128_t>(limb) * TEN18 + carry;
-         limb = static_cast<u_int64_t>(scratch);
-         carry = scratch >> 64;
+         __uint128_t tmp = static_cast<__uint128_t>(d) * TEN18 + carry;
+         carry = tmp >> 64;
+         d = static_cast<u_int64_t>(tmp);
       }
-
       this->digits.push_back(carry);
    }
-
-   this->digits.pop_back();
+   digits.pop_back();
 }
