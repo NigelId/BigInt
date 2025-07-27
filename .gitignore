@@ -1,0 +1,6 @@
+*.txt 
+build/
+main.cpp
+test/
+*.json
+
