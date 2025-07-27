@@ -1,9 +1,0 @@
-*.txt 
-build/
-main.cpp
-test/
-*.json
-.gitignore
-.cache/
-_clang_format
-
