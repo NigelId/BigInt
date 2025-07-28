@@ -25,7 +25,7 @@ class BigInt
    friend BigInt operator+(const BigInt &, const BigInt &);
 
    friend BigInt &operator-=(BigInt &, const BigInt &);
-   friend BigInt operator-(BigInt &, const BigInt &);
+   friend BigInt operator-(const BigInt &, const BigInt &);
 
    friend BigInt &operator*=(BigInt &, const BigInt &);
    friend BigInt operator*(const BigInt &, const BigInt &);
