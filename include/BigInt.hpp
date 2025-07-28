@@ -6,8 +6,8 @@
 class BigInt
 {
  private:
-   bool is_negative{};
    std::vector<u_int64_t> digits;
+   bool is_negative{};
 
  public:
    BigInt(const int64_t s);
@@ -32,4 +32,6 @@ class BigInt
 
    friend BigInt &operator<<=(BigInt &, const BigInt &);
    friend BigInt operator<<(const BigInt &, const BigInt &);
+
+   friend std::ostream &operator<<(std::ostream &os, const BigInt &);
 };

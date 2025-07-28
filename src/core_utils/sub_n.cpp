@@ -1,20 +1,37 @@
 #include "core_utils.hpp"
 #include "immintrin.h"
 
-void sub_n(u_int64_t *A_ptr, const u_int64_t &A_size, const u_int64_t *B_ptr,
-           const u_int64_t &B_size)
+void sub_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr, const size_t &B_size)
 {
    u_int8_t borrow{};
 
    unsigned long long *A_ptr_ull = reinterpret_cast<unsigned long long *>(A_ptr);
 
-   for (u_int64_t i = 0; i < B_size; i++)
+   for (size_t i = 0; i < B_size; i++)
    {
       borrow = _subborrow_u64(borrow, A_ptr_ull[i], B_ptr[i], &A_ptr_ull[i]);
    }
 
-   for (u_int64_t i = B_size; i < A_size; i++)
+   for (size_t i = B_size; i < A_size; i++)
    {
       borrow = _subborrow_u64(borrow, A_ptr_ull[i], 0, &A_ptr_ull[i]);
+   }
+}
+
+void sub_n(u_int64_t *dest, const u_int64_t *A_ptr, const size_t &A_size,
+           const u_int64_t *B_ptr, const size_t &B_size)
+{
+   u_int8_t borrow{};
+
+   unsigned long long *dest_ull = reinterpret_cast<unsigned long long *>(dest);
+
+   for (size_t i = 0; i < B_size; i++)
+   {
+      borrow = _subborrow_u64(borrow, A_ptr[i], B_ptr[i], dest_ull + i);
+   }
+
+   for (size_t i = B_size; i < A_size; i++)
+   {
+      borrow = _subborrow_u64(borrow, A_ptr[i], 0, dest_ull + i);
    }
 }

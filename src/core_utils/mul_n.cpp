@@ -1,7 +1,7 @@
 #include "core_utils.hpp"
 
-void mul_n(u_int64_t *Res, const u_int64_t *A_ptr, const u_int64_t &A_size,
-           const u_int64_t *B_ptr, const u_int64_t &B_size)
+void mul_n(u_int64_t *Res, const u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr,
+           const size_t &B_size)
 {
    u_int64_t carry{};
    __uint128_t scratch{};
