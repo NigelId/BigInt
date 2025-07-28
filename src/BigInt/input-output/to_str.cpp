@@ -1,5 +1,4 @@
 #include "BigInt.hpp"
-#include "iostream"
 constexpr u_int64_t magic = 0xCCCCCCCCCCCCCCCD;
 constexpr u_int64_t TEN18 = 1e18;
 
@@ -29,7 +28,7 @@ std::string BigInt::to_str() const
    while (!temp.empty())
    {
       __uint64_t rem = 0;
-      for (int i = tmp_len - 1; i >= 0; --i)
+      for (long i = tmp_len - 1; i >= 0; --i)
       {
          __uint128_t cur = (__uint128_t(rem) << 64 | tmp_data[i]);
          tmp_data[i] = static_cast<u_int64_t>(cur / TEN18);
@@ -56,7 +55,7 @@ std::string BigInt::to_str() const
 
    char TEN18CHUNKS[18];
 
-   for (int i = tmp_len - 2; i >= 0; --i)
+   for (long i = tmp_len - 2; i >= 0; --i)
    {
       u_int64_t n = tmp_data[i];
 
