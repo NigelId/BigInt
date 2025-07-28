@@ -17,6 +17,5 @@ BigInt &operator*=(BigInt &A, const BigInt &B)
    }
 
    A.is_negative = A.is_negative ^ B.is_negative;
-
    return A;
 }

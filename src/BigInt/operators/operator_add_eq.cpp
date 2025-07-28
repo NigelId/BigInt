@@ -35,7 +35,6 @@ BigInt &operator+=(BigInt &A, const BigInt &B)
       A.is_negative = false;
       return A;
    }
-
    if (cmp > 0)
    {
       sub_n(A_ptr, A_size, B_ptr, B_size);
