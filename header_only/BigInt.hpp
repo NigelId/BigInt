@@ -141,7 +141,7 @@ inline void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift
 
    if (limb_shift)
    {
-      for (size_t i = 0; i < A_size - limb_shift; i++)
+      for (size_t i = 0; i < A_size; i++)
       {
          A_ptr[i + limb_shift] = A_ptr[i];
       }
