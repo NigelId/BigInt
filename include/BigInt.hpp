@@ -30,8 +30,8 @@ class BigInt
    friend BigInt &operator*=(BigInt &, const BigInt &);
    friend BigInt operator*(const BigInt &, const BigInt &);
 
-   friend BigInt &operator<<=(BigInt &, const BigInt &);
-   friend BigInt operator<<(const BigInt &, const BigInt &);
+   friend BigInt &operator<<=(BigInt &, const u_int64_t &);
+   friend BigInt operator<<(const BigInt &, const u_int64_t &);
 
    friend std::ostream &operator<<(std::ostream &os, const BigInt &);
 };

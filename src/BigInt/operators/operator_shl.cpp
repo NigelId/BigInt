@@ -1,0 +1,25 @@
+#include "BigInt.hpp"
+#include "core_utils.hpp"
+
+BigInt &operator<<=(BigInt &A, const u_int64_t &shift)
+{
+
+   u_int64_t A_size = A.digits.size();
+
+   A.digits.resize(A_size + shift / 64 + 1);
+
+   shl_n(A.digits.data(), A_size, shift);
+
+   if (A.digits.back() == 0)
+   {
+      A.digits.pop_back();
+   }
+   return A;
+}
+
+BigInt operator<<(const BigInt &A, const u_int64_t &shift)
+{
+   BigInt tmp = A;
+   tmp <<= shift;
+   return A;
+}

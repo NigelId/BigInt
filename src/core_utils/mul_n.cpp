@@ -9,9 +9,11 @@ void mul_n(u_int64_t *Res, const u_int64_t *A_ptr, const size_t &A_size, const u
    for (size_t i = 0; i < A_size; i++)
    {
       carry = 0;
+      u_int64_t Ai = A_ptr[i];
+
       for (size_t j = 0; j < B_size; j++)
       {
-         scratch = static_cast<__uint128_t>(A_ptr[i]) * (B_ptr[j]) + Res[i + j] + carry;
+         scratch = static_cast<__uint128_t>(Ai) * (B_ptr[j]) + Res[i + j] + carry;
          Res[i + j] = static_cast<u_int64_t>(scratch);
          carry = scratch >> 64;
       }
