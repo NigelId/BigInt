@@ -188,8 +188,8 @@ class BigInt
    friend BigInt &operator*=(BigInt &, const BigInt &);
    friend BigInt operator*(const BigInt &, const BigInt &);
 
-   friend BigInt &operator<<=(BigInt &, const BigInt &);
-   friend BigInt operator<<(const BigInt &, const BigInt &);
+   friend BigInt &operator<<=(BigInt &, const u_int64_t &);
+   friend BigInt operator<<(const BigInt &, const u_int64_t &);
 
    friend std::ostream &operator<<(std::ostream &os, const BigInt &);
 };
@@ -357,6 +357,28 @@ inline BigInt operator*(const BigInt &A, const BigInt &B)
    return tmp;
 }
 
+inline BigInt &operator<<=(BigInt &A, const u_int64_t &shift)
+{
+
+   u_int64_t A_size = A.digits.size();
+
+   A.digits.resize(A_size + shift / 64 + 1);
+
+   shl_n(A.digits.data(), A_size, shift);
+
+   if (A.digits.back() == 0)
+   {
+      A.digits.pop_back();
+   }
+   return A;
+}
+
+inline BigInt operator<<(const BigInt &A, const u_int64_t &shift)
+{
+   BigInt tmp = A;
+   tmp <<= shift;
+   return A;
+}
 inline BigInt::BigInt(int64_t s)
 {
    this->digits.push_back((s ^ (s >> 63)) - (s >> 63));
