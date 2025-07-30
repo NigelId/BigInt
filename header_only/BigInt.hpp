@@ -3,12 +3,14 @@
 #ifndef __BIG_INT_
 #define __BIG_INT_
 
+#include <cstdint>
 #include <immintrin.h>
 #include <iostream>
 #include <string>
-#include <sys/types.h>
 #include <vector>
 
+using u_int64_t = uint64_t;
+using u_int8_t = uint8_t;
 int inline cmp_abs_n(const u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr,
                      const size_t &B_size)
 {
@@ -457,7 +459,7 @@ inline std::string BigInt::to_str() const
 
    while (!temp.empty())
    {
-      __uint64_t rem = 0;
+      u_int64_t rem = 0;
       for (long i = tmp_len - 1; i >= 0; --i)
       {
          __uint128_t cur = (__uint128_t(rem) << 64 | tmp_data[i]);
