@@ -1,6 +1,6 @@
 #include "core_utils.hpp"
 
-int cmp_abs_n(const u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr,
+int cmp_abs_n(const uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr,
               const size_t &B_size)
 {
    if (A_size > B_size)

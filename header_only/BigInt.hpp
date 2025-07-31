@@ -10,9 +10,7 @@
 #include <string>
 #include <vector>
 
-using u_int64_t = uint64_t;
-using u_int8_t = uint8_t;
-int inline cmp_abs_n(const u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr,
+int inline cmp_abs_n(const uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr,
                      const size_t &B_size)
 {
    if (A_size > B_size)
@@ -39,46 +37,46 @@ int inline cmp_abs_n(const u_int64_t *A_ptr, const size_t &A_size, const u_int64
    return 0;
 }
 
-void inline add_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr,
+void inline add_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr,
                   const size_t &B_size)
 {
-   u_int8_t carry{};
+   uint8_t carry{};
 
    unsigned long long *A_ptr_ull = reinterpret_cast<unsigned long long *>(A_ptr);
 
-   for (u_int64_t i = 0; i < B_size; i++)
+   for (uint64_t i = 0; i < B_size; i++)
    {
       carry = _addcarry_u64(carry, A_ptr_ull[i], B_ptr[i], &A_ptr_ull[i]);
    }
 
-   for (u_int64_t i = B_size; i < A_size; i++)
+   for (uint64_t i = B_size; i < A_size; i++)
    {
       carry = _addcarry_u64(carry, A_ptr_ull[i], 0, &A_ptr_ull[i]);
    }
 }
 
-void inline add_n(u_int64_t *dest, const u_int64_t *A_ptr, const size_t &A_size,
-                  const u_int64_t *B_ptr, const size_t &B_size)
+void inline add_n(uint64_t *dest, const uint64_t *A_ptr, const size_t &A_size,
+                  const uint64_t *B_ptr, const size_t &B_size)
 {
-   u_int8_t carry{};
+   uint8_t carry{};
 
    unsigned long long *dest_ull = reinterpret_cast<unsigned long long *>(dest);
 
-   for (u_int64_t i = 0; i < B_size; i++)
+   for (uint64_t i = 0; i < B_size; i++)
    {
       carry = _addcarry_u64(carry, A_ptr[i], B_ptr[i], (dest_ull + i));
    }
 
-   for (u_int64_t i = B_size; i < A_size; i++)
+   for (uint64_t i = B_size; i < A_size; i++)
    {
       carry = _addcarry_u64(carry, A_ptr[i], 0, (dest_ull + i));
    }
 }
 
-void inline sub_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr,
+void inline sub_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr,
                   const size_t &B_size)
 {
-   u_int8_t borrow{};
+   uint8_t borrow{};
 
    unsigned long long *A_ptr_ull = reinterpret_cast<unsigned long long *>(A_ptr);
 
@@ -93,10 +91,10 @@ void inline sub_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr
    }
 }
 
-void inline sub_n(u_int64_t *dest, const u_int64_t *A_ptr, const size_t &A_size,
-                  const u_int64_t *B_ptr, const size_t &B_size)
+void inline sub_n(uint64_t *dest, const uint64_t *A_ptr, const size_t &A_size,
+                  const uint64_t *B_ptr, const size_t &B_size)
 {
-   u_int8_t borrow{};
+   uint8_t borrow{};
 
    unsigned long long *dest_ull = reinterpret_cast<unsigned long long *>(dest);
 
@@ -111,10 +109,10 @@ void inline sub_n(u_int64_t *dest, const u_int64_t *A_ptr, const size_t &A_size,
    }
 }
 
-void inline mul_n(u_int64_t *Res, const u_int64_t *A_ptr, const size_t &A_size,
-                  const u_int64_t *B_ptr, const size_t &B_size)
+void inline mul_n(uint64_t *Res, const uint64_t *A_ptr, const size_t &A_size,
+                  const uint64_t *B_ptr, const size_t &B_size)
 {
-   u_int64_t carry{};
+   uint64_t carry{};
    __uint128_t scratch{};
 
    for (size_t i = 0; i < A_size; i++)
@@ -123,26 +121,26 @@ void inline mul_n(u_int64_t *Res, const u_int64_t *A_ptr, const size_t &A_size,
       for (size_t j = 0; j < B_size; j++)
       {
          scratch = static_cast<__uint128_t>(A_ptr[i]) * (B_ptr[j]) + Res[i + j] + carry;
-         Res[i + j] = static_cast<u_int64_t>(scratch);
+         Res[i + j] = static_cast<uint64_t>(scratch);
          carry = scratch >> 64;
       }
-      Res[i + B_size] = static_cast<u_int64_t>(carry);
+      Res[i + B_size] = static_cast<uint64_t>(carry);
    }
 }
 
-inline void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift)
+inline void shl_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t &shift)
 {
    if (shift == 0 || A_size == 0)
    {
       return;
    }
-   const u_int64_t limb_shift = shift >> 6;
-   const u_int64_t bit_shift = shift & 63;
-   const u_int64_t bit_shift_cmpl = 64 - bit_shift;
+   const uint64_t limb_shift = shift >> 6;
+   const uint64_t bit_shift = shift & 63;
+   const uint64_t bit_shift_cmpl = 64 - bit_shift;
 
    if (limb_shift)
    {
-      memmove(A_ptr + limb_shift, A_ptr, A_size * sizeof(u_int64_t));
+      memmove(A_ptr + limb_shift, A_ptr, A_size * sizeof(uint64_t));
 
       for (size_t i = 0; i < limb_shift; i++)
       {
@@ -152,7 +150,7 @@ inline void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift
 
    if (bit_shift)
    {
-      u_int64_t carry = 0;
+      uint64_t carry = 0;
       for (size_t i = 0; i < (A_size + limb_shift); i++)
       {
          A_ptr[i] = (A_ptr[i] << bit_shift) + carry;
@@ -163,7 +161,7 @@ inline void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift
 class BigInt
 {
  private:
-   std::vector<u_int64_t> digits;
+   std::vector<uint64_t> digits;
    bool is_negative{};
 
  public:
@@ -187,8 +185,8 @@ class BigInt
    friend BigInt &operator*=(BigInt &, const BigInt &);
    friend BigInt operator*(const BigInt &, const BigInt &);
 
-   friend BigInt &operator<<=(BigInt &, const u_int64_t &);
-   friend BigInt operator<<(const BigInt &, const u_int64_t &);
+   friend BigInt &operator<<=(BigInt &, const uint64_t &);
+   friend BigInt operator<<(const BigInt &, const uint64_t &);
 
    friend std::ostream &operator<<(std::ostream &os, const BigInt &);
 };
@@ -196,10 +194,10 @@ class BigInt
 inline BigInt &operator+=(BigInt &A, const BigInt &B)
 {
    const size_t &B_size = B.digits.size();
-   const u_int64_t *B_ptr = B.digits.data();
+   const uint64_t *B_ptr = B.digits.data();
 
    size_t A_size = A.digits.size();
-   u_int64_t *A_ptr = A.digits.data();
+   uint64_t *A_ptr = A.digits.data();
 
    if (A.is_negative == B.is_negative)
    {
@@ -264,10 +262,10 @@ inline BigInt operator+(const BigInt &A, const BigInt &B)
 inline BigInt &operator-=(BigInt &A, const BigInt &B)
 {
    const size_t B_size = B.digits.size();
-   const u_int64_t *B_ptr = B.digits.data();
+   const uint64_t *B_ptr = B.digits.data();
 
    size_t A_size = A.digits.size();
-   u_int64_t *A_ptr = A.digits.data();
+   uint64_t *A_ptr = A.digits.data();
 
    if (A.is_negative != B.is_negative)
    {
@@ -331,9 +329,9 @@ inline BigInt operator-(const BigInt &A, const BigInt &B)
 
 inline BigInt &operator*=(BigInt &A, const BigInt &B)
 {
-   u_int64_t A_size = A.digits.size(), B_size = B.digits.size();
+   uint64_t A_size = A.digits.size(), B_size = B.digits.size();
 
-   std::vector<u_int64_t> Res(A_size + B_size, 0);
+   std::vector<uint64_t> Res(A_size + B_size, 0);
 
    mul_n(Res.data(), A.digits.data(), A_size, B.digits.data(), B_size);
 
@@ -356,10 +354,10 @@ inline BigInt operator*(const BigInt &A, const BigInt &B)
    return tmp;
 }
 
-inline BigInt &operator<<=(BigInt &A, const u_int64_t &shift)
+inline BigInt &operator<<=(BigInt &A, const uint64_t &shift)
 {
 
-   u_int64_t A_size = A.digits.size();
+   uint64_t A_size = A.digits.size();
 
    A.digits.resize(A_size + shift / 64 + 1);
 
@@ -372,7 +370,7 @@ inline BigInt &operator<<=(BigInt &A, const u_int64_t &shift)
    return A;
 }
 
-inline BigInt operator<<(const BigInt &A, const u_int64_t &shift)
+inline BigInt operator<<(const BigInt &A, const uint64_t &shift)
 {
    BigInt tmp = A;
    tmp <<= shift;
@@ -384,11 +382,11 @@ inline BigInt::BigInt(int64_t s)
    this->is_negative = (s >> 63) & 1;
 }
 
-constexpr u_int64_t TEN18 = 1e18;
+constexpr uint64_t TEN18 = 1e18;
 
-constexpr inline u_int64_t parse_18(const char *slice, size_t len)
+constexpr inline uint64_t parse_18(const char *slice, size_t len)
 {
-   u_int64_t res{};
+   uint64_t res{};
    for (size_t i{}; i < len; i++)
    {
       res = res * 10ULL + (slice[i] - '0');
@@ -406,7 +404,7 @@ inline BigInt::BigInt(const std::string &str)
 
    size_t rem = (len - 1) % 18 + 1;
 
-   u_int64_t carry = parse_18(data, rem);
+   uint64_t carry = parse_18(data, rem);
 
    this->digits.reserve(len / 18 + 2);
 
@@ -416,11 +414,11 @@ inline BigInt::BigInt(const std::string &str)
    {
       carry = parse_18(data + i, 18);
 
-      for (u_int64_t &d : this->digits)
+      for (uint64_t &d : this->digits)
       {
          __uint128_t tmp = static_cast<__uint128_t>(d) * TEN18 + carry;
          carry = tmp >> 64;
-         d = static_cast<u_int64_t>(tmp);
+         d = static_cast<uint64_t>(tmp);
       }
       if (carry)
       {
@@ -429,11 +427,11 @@ inline BigInt::BigInt(const std::string &str)
    }
 }
 
-constexpr u_int64_t magic = 0xCCCCCCCCCCCCCCCD;
+constexpr uint64_t magic = 0xCCCCCCCCCCCCCCCD;
 
-constexpr inline void fast_to_char(u_int64_t &n, char *buf)
+constexpr inline void fast_to_char(uint64_t &n, char *buf)
 {
-   u_int64_t tmp = (static_cast<__uint128_t>(n) * magic) >> 67;
+   uint64_t tmp = (static_cast<__uint128_t>(n) * magic) >> 67;
    *buf = static_cast<char>('0' + (n - tmp * 10));
    n = tmp;
 }
@@ -445,10 +443,10 @@ inline std::string BigInt::to_str() const
       return "0";
    }
 
-   std::vector<u_int64_t> temp(digits);
-   std::vector<u_int64_t> chunks;
+   std::vector<uint64_t> temp(digits);
+   std::vector<uint64_t> chunks;
 
-   u_int64_t *tmp_data = temp.data();
+   uint64_t *tmp_data = temp.data();
 
    size_t tmp_len = temp.size();
 
@@ -456,12 +454,12 @@ inline std::string BigInt::to_str() const
 
    while (!temp.empty())
    {
-      u_int64_t rem = 0;
+      uint64_t rem = 0;
       for (long i = tmp_len - 1; i >= 0; --i)
       {
          __uint128_t cur = (__uint128_t(rem) << 64 | tmp_data[i]);
-         tmp_data[i] = static_cast<u_int64_t>(cur / TEN18);
-         rem = static_cast<u_int64_t>(cur - tmp_data[i] * TEN18);
+         tmp_data[i] = static_cast<uint64_t>(cur / TEN18);
+         rem = static_cast<uint64_t>(cur - tmp_data[i] * TEN18);
       }
 
       chunks.push_back(rem);
@@ -486,7 +484,7 @@ inline std::string BigInt::to_str() const
 
    for (long i = tmp_len - 2; i >= 0; --i)
    {
-      u_int64_t n = tmp_data[i];
+      uint64_t n = tmp_data[i];
 
       for (int j = 17; j >= 0; j--)
       {

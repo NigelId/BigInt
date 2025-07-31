@@ -1,17 +1,17 @@
 #include "BigInt.hpp"
-constexpr u_int64_t magic = 0xCCCCCCCCCCCCCCCD;
-constexpr u_int64_t TEN18 = 1e18;
+constexpr uint64_t magic = 0xCCCCCCCCCCCCCCCD;
+constexpr uint64_t TEN18 = 1e18;
 
-constexpr inline void fast_to_char(u_int64_t &n, char *buf)
+constexpr inline void fast_to_char(uint64_t &n, char *buf)
 {
-   u_int64_t tmp = (static_cast<__uint128_t>(n) * magic) >> 67;
+   uint64_t tmp = (static_cast<__uint128_t>(n) * magic) >> 67;
    *buf = static_cast<char>('0' + (n - tmp * 10));
    n = tmp;
 }
 
-inline void fast_divmod_TEN18(__uint128_t cur, u_int64_t &quotient, u_int64_t &remainder)
+inline void fast_divmod_TEN18(__uint128_t cur, uint64_t &quotient, uint64_t &remainder)
 {
-   constexpr u_int64_t TEN18 = 1'000'000'000'000'000'000ULL;
+   constexpr uint64_t TEN18 = 1'000'000'000'000'000'000ULL;
    constexpr __uint128_t MAGIC_TEN18 = (__uint128_t(1) << 123) / TEN18 + 1;
    constexpr int SHIFT = 59;
 
@@ -25,8 +25,8 @@ inline void fast_divmod_TEN18(__uint128_t cur, u_int64_t &quotient, u_int64_t &r
       r -= TEN18;
    }
 
-   quotient = static_cast<u_int64_t>(q);
-   remainder = static_cast<u_int64_t>(r);
+   quotient = static_cast<uint64_t>(q);
+   remainder = static_cast<uint64_t>(r);
 }
 
 std::string BigInt::to_str() const
@@ -36,10 +36,10 @@ std::string BigInt::to_str() const
       return "0";
    }
 
-   std::vector<u_int64_t> temp(digits);
-   std::vector<u_int64_t> chunks;
+   std::vector<uint64_t> temp(digits);
+   std::vector<uint64_t> chunks;
 
-   u_int64_t *tmp_data = temp.data();
+   uint64_t *tmp_data = temp.data();
 
    size_t tmp_len = temp.size();
 
@@ -51,8 +51,8 @@ std::string BigInt::to_str() const
       for (long i = tmp_len - 1; i >= 0; --i)
       {
          __uint128_t cur = (__uint128_t(rem) << 64 | tmp_data[i]);
-         tmp_data[i] = static_cast<u_int64_t>(cur / TEN18);
-         rem = static_cast<u_int64_t>(cur - tmp_data[i] * TEN18);
+         tmp_data[i] = static_cast<uint64_t>(cur / TEN18);
+         rem = static_cast<uint64_t>(cur - tmp_data[i] * TEN18);
       }
 
       chunks.push_back(rem);
@@ -77,7 +77,7 @@ std::string BigInt::to_str() const
 
    for (long i = tmp_len - 2; i >= 0; --i)
    {
-      u_int64_t n = tmp_data[i];
+      uint64_t n = tmp_data[i];
 
       for (int j = 17; j >= 0; j--)
       {

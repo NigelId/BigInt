@@ -1,9 +1,9 @@
 #include "BigInt.hpp"
 #include "core_utils.hpp"
 
-BigInt &operator<<=(BigInt &A, const u_int64_t &shift)
+BigInt &operator<<=(BigInt &A, const uint64_t &shift)
 {
-   u_int64_t A_size = A.digits.size();
+   uint64_t A_size = A.digits.size();
    // A.digits.reserve(A_size + shift / 64 + 1);
 
    A.digits.resize(A_size + (shift >> 6) + 1);
@@ -17,7 +17,7 @@ BigInt &operator<<=(BigInt &A, const u_int64_t &shift)
    return A;
 }
 
-BigInt operator<<(const BigInt &A, const u_int64_t &shift)
+BigInt operator<<(const BigInt &A, const uint64_t &shift)
 {
    BigInt tmp = A;
    tmp <<= shift;

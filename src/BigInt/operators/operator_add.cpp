@@ -4,10 +4,10 @@
 BigInt &operator+=(BigInt &A, const BigInt &B)
 {
    const size_t &B_size = B.digits.size();
-   const u_int64_t *B_ptr = B.digits.data();
+   const uint64_t *B_ptr = B.digits.data();
 
    size_t A_size = A.digits.size();
-   u_int64_t *A_ptr = A.digits.data();
+   uint64_t *A_ptr = A.digits.data();
 
    if (A.is_negative == B.is_negative)
    {

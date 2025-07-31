@@ -1,9 +1,9 @@
 #include "core_utils.hpp"
 #include "immintrin.h"
 
-void sub_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr, const size_t &B_size)
+void sub_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr, const size_t &B_size)
 {
-   u_int8_t borrow{};
+   uint8_t borrow{};
 
    unsigned long long *A_ptr_ull = reinterpret_cast<unsigned long long *>(A_ptr);
 
@@ -18,10 +18,10 @@ void sub_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t *B_ptr, const
    }
 }
 
-void sub_n(u_int64_t *dest, const u_int64_t *A_ptr, const size_t &A_size,
-           const u_int64_t *B_ptr, const size_t &B_size)
+void sub_n(uint64_t *dest, const uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr,
+           const size_t &B_size)
 {
-   u_int8_t borrow{};
+   uint8_t borrow{};
 
    unsigned long long *dest_ull = reinterpret_cast<unsigned long long *>(dest);
 

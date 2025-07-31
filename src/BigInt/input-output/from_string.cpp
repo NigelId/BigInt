@@ -1,10 +1,10 @@
 #include "BigInt.hpp"
 
-const u_int64_t TEN18 = 1000000000000000000ULL;
+const uint64_t TEN18 = 1000000000000000000ULL;
 
-constexpr inline u_int64_t parse_18(const char *slice, size_t len)
+constexpr inline uint64_t parse_18(const char *slice, size_t len)
 {
-   u_int64_t res{};
+   uint64_t res{};
    for (size_t i{}; i < len; i++)
    {
       res = res * 10ULL + (slice[i] - '0');
@@ -22,7 +22,7 @@ BigInt::BigInt(const std::string &str)
 
    size_t rem = (len - 1) % 18 + 1;
 
-   u_int64_t carry = parse_18(data, rem);
+   uint64_t carry = parse_18(data, rem);
 
    this->digits.reserve(len / 18 + 2);
 
@@ -32,11 +32,11 @@ BigInt::BigInt(const std::string &str)
    {
       carry = parse_18(data + i, 18);
 
-      for (u_int64_t &d : this->digits)
+      for (uint64_t &d : this->digits)
       {
          __uint128_t tmp = static_cast<__uint128_t>(d) * TEN18 + carry;
          carry = tmp >> 64;
-         d = static_cast<u_int64_t>(tmp);
+         d = static_cast<uint64_t>(tmp);
       }
       if (carry)
       {

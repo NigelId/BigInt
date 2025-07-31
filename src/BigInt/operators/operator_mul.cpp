@@ -3,9 +3,9 @@
 
 BigInt &operator*=(BigInt &A, const BigInt &B)
 {
-   u_int64_t A_size = A.digits.size(), B_size = B.digits.size();
+   uint64_t A_size = A.digits.size(), B_size = B.digits.size();
 
-   std::vector<u_int64_t> Res(A_size + B_size, 0);
+   std::vector<uint64_t> Res(A_size + B_size, 0);
 
    mul_n(Res.data(), A.digits.data(), A_size, B.digits.data(), B_size);
 
