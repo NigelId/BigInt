@@ -9,6 +9,26 @@ constexpr inline void fast_to_char(u_int64_t &n, char *buf)
    n = tmp;
 }
 
+inline void fast_divmod_TEN18(__uint128_t cur, u_int64_t &quotient, u_int64_t &remainder)
+{
+   constexpr u_int64_t TEN18 = 1'000'000'000'000'000'000ULL;
+   constexpr __uint128_t MAGIC_TEN18 = (__uint128_t(1) << 123) / TEN18 + 1;
+   constexpr int SHIFT = 59;
+
+   __uint128_t q = (cur * MAGIC_TEN18) >> SHIFT;
+   __uint128_t r = cur - q * TEN18;
+
+   // Fix if overestimated by 1
+   if (r >= TEN18)
+   {
+      q++;
+      r -= TEN18;
+   }
+
+   quotient = static_cast<u_int64_t>(q);
+   remainder = static_cast<u_int64_t>(r);
+}
+
 std::string BigInt::to_str() const
 {
    if (digits.empty() || (digits.size() == 1 && digits[0] == 0))
@@ -37,12 +57,12 @@ std::string BigInt::to_str() const
 
       chunks.push_back(rem);
 
-      while (!temp.empty() && temp.back() == 0)
+      while (tmp_len > 0 && tmp_data[tmp_len - 1] == 0)
       {
          temp.pop_back();
          tmp_len--;
+         tmp_data = temp.data();
       }
-      tmp_data = temp.data();
    }
 
    tmp_data = chunks.data();

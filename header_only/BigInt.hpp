@@ -4,6 +4,7 @@
 #define __BIG_INT_
 
 #include <cstdint>
+#include <cstring>
 #include <immintrin.h>
 #include <iostream>
 #include <string>
@@ -141,10 +142,7 @@ inline void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift
 
    if (limb_shift)
    {
-      for (size_t i = 0; i < A_size; i++)
-      {
-         A_ptr[i + limb_shift] = A_ptr[i];
-      }
+      memmove(A_ptr + limb_shift, A_ptr, A_size * sizeof(u_int64_t));
 
       for (size_t i = 0; i < limb_shift; i++)
       {
@@ -162,7 +160,6 @@ inline void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift
       }
    }
 }
-
 class BigInt
 {
  private:

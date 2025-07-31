@@ -1,8 +1,8 @@
 #include "core_utils.hpp"
 
-void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift)
+void shl_n(u_int64_t *A_ptr, const size_t &Ao_size, const u_int64_t &shift)
 {
-   if (shift == 0 || A_size == 0)
+   if (shift == 0 || Ao_size == 0)
    {
       return;
    }
@@ -12,24 +12,19 @@ void shl_n(u_int64_t *A_ptr, const size_t &A_size, const u_int64_t &shift)
 
    if (limb_shift)
    {
-      for (size_t i = 0; i < A_size; i++)
-      {
-         A_ptr[i + limb_shift] = A_ptr[i];
-      }
-
-      for (size_t i = 0; i < limb_shift; i++)
-      {
-         A_ptr[i] = 0;
-      }
+      memmove(A_ptr + limb_shift, A_ptr, Ao_size * sizeof(u_int64_t));
+      memset(A_ptr, 0, limb_shift * sizeof(u_int64_t));
    }
 
    if (bit_shift)
    {
       u_int64_t carry = 0;
-      for (size_t i = 0; i < (A_size + limb_shift); i++)
+      for (size_t i = limb_shift; i < (Ao_size + limb_shift); i++)
       {
+         u_int64_t new_car = A_ptr[i] >> bit_shift_cmpl;
          A_ptr[i] = (A_ptr[i] << bit_shift) + carry;
-         carry = A_ptr[i] >> bit_shift_cmpl;
+         carry = new_car;
       }
+      A_ptr[Ao_size + limb_shift] = carry;
    }
 }

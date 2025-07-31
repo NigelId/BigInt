@@ -3,10 +3,10 @@
 
 BigInt &operator<<=(BigInt &A, const u_int64_t &shift)
 {
-
    u_int64_t A_size = A.digits.size();
+   // A.digits.reserve(A_size + shift / 64 + 1);
 
-   A.digits.resize(A_size + shift / 64 + 1);
+   A.digits.resize(A_size + (shift >> 6) + 1);
 
    shl_n(A.digits.data(), A_size, shift);
 
@@ -21,5 +21,5 @@ BigInt operator<<(const BigInt &A, const u_int64_t &shift)
 {
    BigInt tmp = A;
    tmp <<= shift;
-   return A;
+   return tmp;
 }

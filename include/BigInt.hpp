@@ -10,9 +10,11 @@ class BigInt
    bool is_negative{};
 
  public:
+   BigInt() = default;
    BigInt(const int64_t s);
    BigInt(const std::string &);
    BigInt(const BigInt &) noexcept = default;
+   BigInt(std::initializer_list<u_int64_t> init) : digits(init) {}
 
  public:
    std::string to_str() const;

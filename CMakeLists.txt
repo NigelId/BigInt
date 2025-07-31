@@ -10,7 +10,7 @@ ${CMAKE_SOURCE_DIR}/include/core_utils
 )
 
 
-add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-Wall;-Wextra;-pedantic;-flto;-mavx2;-fno-inline;-g>")
+add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-Wall;-Wextra;-pedantic;-flto;-mavx2;-fno-inline;-g3>")
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
