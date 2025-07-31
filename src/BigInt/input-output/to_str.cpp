@@ -1,6 +1,5 @@
 #include "BigInt.hpp"
 constexpr uint64_t magic = 0xCCCCCCCCCCCCCCCD;
-constexpr uint64_t TEN18 = 1e18;
 
 constexpr inline void fast_to_char(uint64_t &n, char *buf)
 {
@@ -9,26 +8,14 @@ constexpr inline void fast_to_char(uint64_t &n, char *buf)
    n = tmp;
 }
 
-inline void fast_divmod_TEN18(__uint128_t cur, uint64_t &quotient, uint64_t &remainder)
+inline void divmod128byTEN18(uint64_t &hi, uint64_t &lo)
 {
-   constexpr uint64_t TEN18 = 1'000'000'000'000'000'000ULL;
-   constexpr __uint128_t MAGIC_TEN18 = (__uint128_t(1) << 123) / TEN18 + 1;
-   constexpr int SHIFT = 59;
-
-   __uint128_t q = (cur * MAGIC_TEN18) >> SHIFT;
-   __uint128_t r = cur - q * TEN18;
-
-   // Fix if overestimated by 1
-   if (r >= TEN18)
-   {
-      q++;
-      r -= TEN18;
-   }
-
-   quotient = static_cast<uint64_t>(q);
-   remainder = static_cast<uint64_t>(r);
+   asm volatile("mov $1000000000000000000, %%rcx\n\t"
+                "divq %%rcx"
+                : "+a"(lo), "+d"(hi) // lo in RAX, hi in RDX, both updated
+                :                    // no inputs (they're marked as in-out)
+                : "rcx", "cc");
 }
-
 std::string BigInt::to_str() const
 {
    if (digits.empty() || (digits.size() == 1 && digits[0] == 0))
@@ -50,9 +37,8 @@ std::string BigInt::to_str() const
       __uint64_t rem = 0;
       for (long i = tmp_len - 1; i >= 0; --i)
       {
-         __uint128_t cur = (__uint128_t(rem) << 64 | tmp_data[i]);
-         tmp_data[i] = static_cast<uint64_t>(cur / TEN18);
-         rem = static_cast<uint64_t>(cur - tmp_data[i] * TEN18);
+
+         divmod128byTEN18(rem, tmp_data[i]);
       }
 
       chunks.push_back(rem);
