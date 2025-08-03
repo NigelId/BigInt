@@ -13,12 +13,6 @@ class Arena
 
    uint64_t *alloc(size_t size)
    {
-      if (offset + size > cap)
-      {
-         cap = offset + size;
-         delete[] base;
-         base = new uint64_t[cap];
-      }
       uint64_t *ptr = base + offset;
       offset += size;
       return ptr;

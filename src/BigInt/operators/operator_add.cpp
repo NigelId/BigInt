@@ -60,6 +60,7 @@ BigInt &operator+=(BigInt &A, const BigInt &B)
    A.is_negative = B.is_negative;
    return A;
 }
+
 BigInt operator+(const BigInt &A, const BigInt &B)
 {
    BigInt tmp = A;
