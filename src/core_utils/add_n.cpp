@@ -1,8 +1,7 @@
 #include "core_utils.hpp"
-#include "immintrin.h"
 
 // Assume A > B
-void add_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr, const size_t &B_size)
+void add_n(uint64_t *A_ptr, const size_t A_size, const uint64_t *B_ptr, const size_t B_size)
 {
    u_int8_t carry{};
 
@@ -19,8 +18,8 @@ void add_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr, const s
    }
 }
 
-void add_n(uint64_t *dest, const uint64_t *A_ptr, const size_t &A_size,
-           const uint64_t *B_ptr, const size_t &B_size)
+void add_n(uint64_t *dest, const uint64_t *A_ptr, const size_t A_size, const uint64_t *B_ptr,
+           const size_t B_size)
 {
    u_int8_t carry{};
 

@@ -10,7 +10,7 @@ ${CMAKE_SOURCE_DIR}/include/core_utils
 )
 
 
-add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-march=native;-Wall;-Wextra;-pedantic;-flto;-mavx2;-fomit-frame-pointer;-fno-stack-protector;-fno-unwind-tables;-fno-asynchronous-unwind-tables;-g3>")
+add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-march=native;-Wall;-Wextra;-pedantic;-flto;-mavx2;-fno-inline;-O2;-g>")
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 

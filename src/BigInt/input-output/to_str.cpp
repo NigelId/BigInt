@@ -1,4 +1,6 @@
 #include "BigInt.hpp"
+
+// TODO : implement divide and conquer after div and mod
 constexpr uint64_t magic = 0xCCCCCCCCCCCCCCCD;
 
 constexpr inline void fast_to_char(uint64_t &n, char *buf)
@@ -8,14 +10,6 @@ constexpr inline void fast_to_char(uint64_t &n, char *buf)
    n = tmp;
 }
 
-inline void divmod128byTEN18(uint64_t &hi, uint64_t &lo)
-{
-   asm volatile("mov $1000000000000000000, %%rcx\n\t"
-                "divq %%rcx"
-                : "+a"(lo), "+d"(hi) // lo in RAX, hi in RDX, both updated
-                :                    // no inputs (they're marked as in-out)
-                : "rcx", "cc");
-}
 std::string BigInt::to_str() const
 {
    if (digits.empty() || (digits.size() == 1 && digits[0] == 0))
@@ -32,13 +26,18 @@ std::string BigInt::to_str() const
 
    chunks.reserve(tmp_len);
 
+   __uint64_t rem = 0;
+
    while (!temp.empty())
    {
-      __uint64_t rem = 0;
+      rem = 0;
       for (long i = tmp_len - 1; i >= 0; --i)
       {
-
-         divmod128byTEN18(rem, tmp_data[i]);
+         asm("mov $10000000000000000000, %%rcx\n\t"
+             "divq %%rcx"
+             : "+a"(*(tmp_data + i)), "+d"(rem)
+             :
+             : "rcx", "cc");
       }
 
       chunks.push_back(rem);
@@ -59,17 +58,17 @@ std::string BigInt::to_str() const
 
    result.reserve(tmp_len * 18 - 1);
 
-   char TEN18CHUNKS[18];
+   char TEN19CHUNKS[19];
 
    for (long i = tmp_len - 2; i >= 0; --i)
    {
       uint64_t n = tmp_data[i];
 
-      for (int j = 17; j >= 0; j--)
+      for (int j = 18; j >= 0; j--)
       {
-         fast_to_char(n, TEN18CHUNKS + j);
+         fast_to_char(n, TEN19CHUNKS + j);
       }
-      result.append(TEN18CHUNKS, 18);
+      result.append(TEN19CHUNKS, 19);
    }
 
    return result;

@@ -1,6 +1,6 @@
 #include "core_utils.hpp"
 
-void shl_n(uint64_t *A_ptr, const size_t &Ao_size, const uint64_t &shift)
+void shl_n(uint64_t *A_ptr, const size_t Ao_size, const uint64_t shift)
 {
    if (shift == 0 || Ao_size == 0)
    {

@@ -1,7 +1,7 @@
 #include "core_utils.hpp"
 #include "immintrin.h"
 
-void sub_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr, const size_t &B_size)
+void sub_n(uint64_t *A_ptr, const size_t A_size, const uint64_t *B_ptr, const size_t B_size)
 {
    uint8_t borrow{};
 
@@ -18,8 +18,8 @@ void sub_n(uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr, const s
    }
 }
 
-void sub_n(uint64_t *dest, const uint64_t *A_ptr, const size_t &A_size, const uint64_t *B_ptr,
-           const size_t &B_size)
+void sub_n(uint64_t *dest, const uint64_t *A_ptr, const size_t A_size, const uint64_t *B_ptr,
+           const size_t B_size)
 {
    uint8_t borrow{};
 
