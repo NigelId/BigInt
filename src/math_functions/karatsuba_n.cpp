@@ -51,16 +51,10 @@ uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, const uint
    const size_t A_TEMP_LEN = std::max(A_LOW_LEN, A_HIGH_LEN) + 1;
    uint64_t *A_TEMP = arena.alloc(A_TEMP_LEN);
 
-   // memset(A_TEMP + A_LOW_LEN, 0, (A_TEMP_LEN - A_LOW_LEN) * sizeof(uint64_t));
-   // memcpy(A_TEMP, A_LOW, A_LOW_LEN * sizeof(uint64_t));
-
    add_n(A_TEMP, A_LOW, A_LOW_LEN, A_HIGH, A_HIGH_LEN);
 
    const size_t B_TEMP_LEN = std::max(B_LOW_LEN, B_HIGH_LEN) + 1;
    uint64_t *B_TEMP = arena.alloc(B_TEMP_LEN);
-
-   // memset(B_TEMP, 0, B_TEMP_LEN * sizeof(uint64_t));
-   // memcpy(B_TEMP, B_LOW, B_LOW_LEN * sizeof(uint64_t));
 
    add_n(B_TEMP, B_LOW, B_LOW_LEN, B_HIGH, B_HIGH_LEN);
 
