@@ -12,7 +12,7 @@ will spit out a pointer that will die with the arena when the arena gets out of 
 void karatsuba_n(std::vector<uint64_t> &Res, const uint64_t *A_ptr, const size_t A_size,
                  const uint64_t *B_ptr, const size_t B_size)
 {
-   Arena arena(static_cast<size_t>(std::pow(A_size + B_size, 1.5201)));
+   Arena arena(static_cast<size_t>(std::pow(A_size + B_size, 1.5201)));  // ~(Log2(3) - 0.6)
    uint64_t *intermidiate = karatsuba_arena(A_ptr, A_size, B_ptr, B_size, arena);
    Res.assign(intermidiate, intermidiate + A_size + B_size);
 }
