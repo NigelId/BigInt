@@ -12,7 +12,7 @@ will spit out a pointer that will die with the arena when the arena gets out of 
 void karatsuba_n(std::vector<uint64_t> &Res, const uint64_t *A_ptr, const size_t A_size,
                  const uint64_t *B_ptr, const size_t B_size)
 {
-   Arena arena(static_cast<size_t>(std::pow(A_size + B_size, 1.5401)));
+   Arena arena(static_cast<size_t>(std::pow(A_size + B_size, 1.5201)));
    uint64_t *intermidiate = karatsuba_arena(A_ptr, A_size, B_ptr, B_size, arena);
    Res.assign(intermidiate, intermidiate + A_size + B_size);
 }
@@ -22,7 +22,7 @@ uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, const uint
 {
    if (B_size > A_size)
    {
-      karatsuba_arena(B_ptr, B_size, A_ptr, A_size, arena);
+      return karatsuba_arena(B_ptr, B_size, A_ptr, A_size, arena);
    }
 
    if (A_size < KARATSUBA_THRESHOLD || B_size < KARATSUBA_THRESHOLD)
@@ -33,36 +33,37 @@ uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, const uint
       return Res;
    }
 
-   const size_t A_HIGH_LEN = A_size >> 1;
-   const size_t A_LOW_LEN = A_size - A_HIGH_LEN;
+   const size_t a_high_len = A_size >> 1;
+   const size_t a_low_len = A_size - a_high_len;
 
-   const uint64_t *A_LOW = A_ptr;
-   const uint64_t *A_HIGH = A_ptr + A_LOW_LEN;
+   const uint64_t *a_low = A_ptr;
+   const uint64_t *a_high = A_ptr + a_low_len;
 
-   const size_t B_LOW_LEN = std::min(B_size, A_LOW_LEN);
-   const size_t B_HIGH_LEN = B_size - B_LOW_LEN;
+   const size_t b_low_len = std::min(B_size, a_low_len);
+   const size_t b_high_len = B_size - b_low_len;
 
-   const uint64_t *B_LOW = B_ptr;
-   const uint64_t *B_HIGH = B_ptr + B_LOW_LEN;
+   const uint64_t *b_low = B_ptr;
+   const uint64_t *b_high = B_ptr + b_low_len;
 
-   uint64_t *z0 = karatsuba_arena(A_LOW, A_LOW_LEN, B_LOW, B_LOW_LEN, arena);
+   uint64_t *z0 = karatsuba_arena(a_low, a_low_len, b_low, b_low_len, arena);
 
-   uint64_t *z2 = karatsuba_arena(A_HIGH, A_HIGH_LEN, B_HIGH, B_HIGH_LEN, arena);
-   const size_t A_TEMP_LEN = std::max(A_LOW_LEN, A_HIGH_LEN) + 1;
-   uint64_t *A_TEMP = arena.alloc(A_TEMP_LEN);
+   uint64_t *z2 = karatsuba_arena(a_high, a_high_len, b_high, b_high_len, arena);
+   const size_t a_tmp_len = std::max(a_low_len, a_high_len) + 1;
+   uint64_t *a_tmp = arena.alloc(a_tmp_len);
 
-   add_n(A_TEMP, A_LOW, A_LOW_LEN, A_HIGH, A_HIGH_LEN);
+   add_n(a_tmp, a_low, a_low_len, a_high, a_high_len);
 
-   const size_t B_TEMP_LEN = std::max(B_LOW_LEN, B_HIGH_LEN) + 1;
-   uint64_t *B_TEMP = arena.alloc(B_TEMP_LEN);
+   const size_t b_tmp_len = std::max(b_low_len, b_high_len) + 1;
 
-   add_n(B_TEMP, B_LOW, B_LOW_LEN, B_HIGH, B_HIGH_LEN);
+   uint64_t *b_tmp = arena.alloc(b_tmp_len);
 
-   uint64_t *z1 = karatsuba_arena(A_TEMP, A_TEMP_LEN, B_TEMP, B_TEMP_LEN, arena);
+   add_n(b_tmp, b_low, b_low_len, b_high, b_high_len);
 
-   const size_t &z1_len = A_TEMP_LEN + B_TEMP_LEN;
-   const size_t &z0_len = A_LOW_LEN + B_LOW_LEN;
-   const size_t &z2_len = A_HIGH_LEN + B_HIGH_LEN;
+   uint64_t *z1 = karatsuba_arena(a_tmp, a_tmp_len, b_tmp, b_tmp_len, arena);
+
+   const size_t &z1_len = a_tmp_len + b_tmp_len;
+   const size_t &z0_len = a_low_len + b_low_len;
+   const size_t &z2_len = a_high_len + b_high_len;
 
    sub_n(z1, z1_len, z0, z0_len);
 
@@ -75,8 +76,8 @@ uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, const uint
    memset(result + z0_len, 0, (result_len - z0_len) * sizeof(uint64_t));
    memcpy(result, z0, z0_len * sizeof(uint64_t));
 
-   add_n(result + A_LOW_LEN, result_len - A_LOW_LEN, z1, z1_len);
+   add_n(result + a_low_len, result_len - a_low_len, z1, z1_len);
 
-   add_n(result + 2 * A_LOW_LEN, result_len - 2 * A_LOW_LEN, z2, z2_len);
+   add_n(result + 2 * a_low_len, result_len - 2 * a_low_len, z2, z2_len);
    return result;
 }
