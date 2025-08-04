@@ -1,9 +1,7 @@
-#include "Arena.hpp"
 #include "BigInt.hpp"
 #include "core_utils.hpp"
 #include "internal/config.hpp"
 #include "math_functions.hpp"
-#include <cmath>
 
 BigInt &operator*=(BigInt &A, const BigInt &B)
 {

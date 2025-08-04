@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -7,9 +8,9 @@ class BigInt
 {
  private:
    std::vector<uint64_t> digits;
-   bool is_negative{};
 
  public:
+   bool is_negative{};
    BigInt() = default;
 
    BigInt(const int64_t s);
@@ -22,12 +23,13 @@ class BigInt
  public:
    template <typename T, typename = typename std::enable_if<
                              std::is_integral<T>::value && !std::is_same<T, uint64_t>::value>::type>
-
-   BigInt(const T s) : BigInt(static_cast<int64_t>(s))
+   BigInt(T val)
+       : BigInt(static_cast<
+                typename std::conditional<std::is_signed<T>::value, int64_t, uint64_t>::type>(val))
    {
    }
 
- public: // method
+ public:
    std::string to_str() const;
    std::string to_vec() const;
 
@@ -115,7 +117,7 @@ template <typename T> IfNotU64_Return_BigInt_Ref<T> operator*=(BigInt &A, const 
 {
    int64_t tmp = val;
    A *= static_cast<uint64_t>(((tmp ^ (tmp >> 63)) - (tmp >> 63)));
-   A.is_negative ^= (tmp >> 63) & 1;
+   A.is_negative ^= (val < 0);
    return A;
 }
 
@@ -130,7 +132,7 @@ template <typename T> IfNotU64_Return_BigInt_Ref<T> operator/=(BigInt &A, const 
 {
    int64_t tmp = val;
    A /= static_cast<uint64_t>(((tmp ^ (tmp >> 63)) - (tmp >> 63)));
-   A.is_negative ^= (tmp >> 63) & 1;
+   A.is_negative ^= (val < 0);
    return A;
 }
 
