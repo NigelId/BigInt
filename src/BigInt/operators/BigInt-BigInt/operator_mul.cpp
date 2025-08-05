@@ -7,7 +7,7 @@ BigInt &operator*=(BigInt &A, const BigInt &B)
 {
    uint64_t A_size = A.digits.size(), B_size = B.digits.size();
 
-   if (A_size > KARATSUBA_THRESHOLD || B_size > KARATSUBA_THRESHOLD)
+   if (A_size > KARATSUBA_CUTOFF || B_size > KARATSUBA_CUTOFF)
    {
       karatsuba_n(A.digits, A.digits.data(), A_size, B.digits.data(), B_size);
 

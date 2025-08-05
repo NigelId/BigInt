@@ -4,7 +4,7 @@
 
 class Arena
 {
-   uint64_t *base;
+   uint64_t *base = nullptr;
    size_t cap;
    size_t offset;
 
@@ -18,5 +18,7 @@ class Arena
       return ptr;
    }
    void reset() { offset = 0; }
+   size_t mark() { return this->offset; }
+   void rewind(size_t mark) { offset = mark; }
    ~Arena() { delete[] base; }
 };
