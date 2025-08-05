@@ -3,5 +3,5 @@
 
 constexpr uint64_t KARATSUBA_CUTOFF = 32;
 constexpr uint64_t RADIX_IO_CONSTANT = 1e19;
-constexpr uint64_t KARATSUBA_OUT_ARENA_FACTOR = 17;
-constexpr uint64_t KARATSUBA_SRATCH_ARENA_FACTOR = 9;
+constexpr uint64_t KARATSUBA_OUT_ARENA_FACTOR = 2;
+constexpr uint64_t KARATSUBA_SRATCH_ARENA_FACTOR = 3;

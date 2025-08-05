@@ -1,14 +1,14 @@
+#include "Arena.hpp"
 #include "core_utils.hpp"
 #include "internal/config.hpp"
 #include "math_functions.hpp"
 
 /* The idea is for karatsuba_n to create 2 arena, then pass it to karatsuba_arena then copy into
-Res, the second arena is only for tmp value, that doesnt need copying , we also cache z1 into the
-tmp arena because z1 is the largest buffer out of all 3. It should be noted that both arena are
-basically tmp chunks of memory. The sratch one are ment for value that does not need to live beyond
-the function  */
+Res, the second arena is only for tmp value, that doesnt need copying , we cache z0, z1 and z2.
+It should be noted that both arena are basically tmp chunks of memory. The sratch one are ment for
+value that does not need to live beyond the function  */
 
-/* If you're confused go to line 72 or 73, look at how i swap out and sratch arena the recursion
+/* If you're confused go to line 58 to 73, look at how i swap out and sratch arena the recursion
  * call*/
 
 /*You can use karatsuba_arena without karatsuba_n by creating your own arena but be warned, it will
@@ -17,7 +17,7 @@ spit out a pointer that will die with the first arena when the first arena gets 
 
 /* And like always, we assume Res has the correct size */
 
-/* Memory is O(nlogn) i cant figure how to drive it down to O(n) */
+/* Memory is almost O(n) */
 
 void karatsuba_n(std::vector<uint64_t> &Res, const uint64_t *A_ptr, const size_t A_size,
                  const uint64_t *B_ptr, const size_t B_size)
@@ -44,7 +44,6 @@ uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, const uint
       mul_n(Res, A_ptr, A_size, B_ptr, B_size);
       return Res;
    }
-
    const size_t a_high_len = A_size >> 1;
    const size_t a_low_len = A_size - a_high_len;
 
@@ -57,10 +56,10 @@ uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, const uint
    const uint64_t *b_low = B_ptr;
    const uint64_t *b_high = B_ptr + b_low_len;
 
-   uint64_t *z0 = karatsuba_arena(a_low, a_low_len, b_low, b_low_len, out_arena, sratch_arena);
-
-   uint64_t *z2 = karatsuba_arena(a_high, a_high_len, b_high, b_high_len, out_arena, sratch_arena);
    size_t mark = sratch_arena.mark();
+
+   uint64_t *z0 = karatsuba_arena(a_low, a_low_len, b_low, b_low_len, sratch_arena, out_arena);
+   uint64_t *z2 = karatsuba_arena(a_high, a_high_len, b_high, b_high_len, sratch_arena, out_arena);
 
    const size_t a_tmp_len = std::max(a_low_len, a_high_len) + 1;
    uint64_t *a_tmp = sratch_arena.alloc(a_tmp_len);
