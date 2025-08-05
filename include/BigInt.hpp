@@ -8,9 +8,9 @@ class BigInt
 {
  private:
    std::vector<uint64_t> digits;
+   bool is_negative{};
 
  public:
-   bool is_negative{};
    BigInt() = default;
 
    BigInt(const int64_t s);
