@@ -24,44 +24,21 @@ BigInt &operator-=(BigInt &A, const BigInt &B)
       return A;
    }
 
-   int cmp = cmp_abs_n(A_ptr, A_size, B_ptr, B_size);
+   A_size = std::max(A_size, B_size);
 
-   if (cmp == 0)
-   {
-      A.digits.clear();
-      A.digits.push_back(0);
-      A.is_negative = false;
-      return A;
-   }
+   A.digits.resize(A_size);
 
-   if (cmp > 0)
-   {
-      sub_n(A_ptr, A_size, B_ptr, B_size);
-
-      while (A_size > 1 && A.digits.back() == 0)
-      {
-         A.digits.pop_back();
-         A_size--;
-      }
-      return A;
-   }
-
-   A.digits.resize(B_size);
-
-   A_ptr = A.digits.data();
-
-   sub_n(A_ptr, B_ptr, B_size, A_ptr, A_size);
+   bool borrow = sub_n(A.digits.data(), A.digits.data(), A_size, B_ptr, B_size);
 
    while (!A.digits.empty() && A.digits.back() == 0)
    {
       A.digits.pop_back();
    }
 
-   A.is_negative = !A.is_negative;
+   A.is_negative ^= borrow;
 
    return A;
 }
-
 BigInt operator-(const BigInt &A, const BigInt &B)
 {
    BigInt tmp = A;

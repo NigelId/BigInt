@@ -9,7 +9,7 @@ BigInt &operator*=(BigInt &A, const BigInt &B)
 
    if (A_size > KARATSUBA_CUTOFF || B_size > KARATSUBA_CUTOFF)
    {
-      karatsuba_n(A.digits, A.digits.data(), A_size, B.digits.data(), B_size);
+      mul_karatsuba_n(A.digits, A.digits.data(), A_size, B.digits.data(), B_size);
 
       if (A.digits.back() == 0)
       {
@@ -20,6 +20,7 @@ BigInt &operator*=(BigInt &A, const BigInt &B)
 
       return A;
    }
+
    std::vector<uint64_t> Res(A_size + B_size, 0);
 
    mul_n(Res.data(), A.digits.data(), A_size, B.digits.data(), B_size);

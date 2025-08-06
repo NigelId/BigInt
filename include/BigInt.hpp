@@ -7,10 +7,10 @@
 class BigInt
 {
  private:
-   std::vector<uint64_t> digits;
    bool is_negative{};
 
  public:
+   std::vector<uint64_t> digits;
    BigInt() = default;
 
    BigInt(const int64_t s);
