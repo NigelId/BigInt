@@ -1,9 +1,6 @@
-#include "Arena.hpp"
 #include "core_utils.hpp"
 #include "internal/config.hpp"
 #include "math_functions.hpp"
-#include <cstring>
-
 /* The idea is for karatsuba_n to create 2 arena, then pass it to karatsuba_arena then copy into
 Res, the second arena is only for tmp value, that doesnt need copying , we cache z0, z1 and z2.
 It should be noted that both arena are basically tmp chunks of memory. The sratch one are ment for
@@ -31,6 +28,7 @@ inline uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, con
       mul_n(Res, A_ptr, A_size, B_ptr, B_size);
       return Res;
    }
+
    const size_t a_high_len = A_size >> 1;
    const size_t a_low_len = A_size - a_high_len;
 
@@ -89,8 +87,9 @@ inline uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, con
 void mul_karatsuba_n(std::vector<uint64_t> &Res, const uint64_t *A_ptr, const size_t A_size,
                      const uint64_t *B_ptr, const size_t B_size)
 {
-   Arena out_arena((KARATSUBA_OUT_ARENA_FACTOR * (A_size + B_size)));
-   Arena sratch_arena((KARATSUBA_SRATCH_ARENA_FACTOR * (A_size + B_size)));
+   const size_t n = std::max(A_size, B_size);
+   Arena out_arena(KARATSUBA_OUT_ARENA_FACTOR * n);
+   Arena sratch_arena(KARATSUBA_SRATCH_ARENA_FACTOR * n);
 
    uint64_t *intermidiate = karatsuba_arena(A_ptr, A_size, B_ptr, B_size, out_arena, sratch_arena);
    Res.assign(intermidiate, intermidiate + A_size + B_size);
@@ -99,8 +98,9 @@ void mul_karatsuba_n(std::vector<uint64_t> &Res, const uint64_t *A_ptr, const si
 void mul_karatsuba_n(uint64_t *Res, const uint64_t *A_ptr, const size_t A_size,
                      const uint64_t *B_ptr, const size_t B_size)
 {
-   Arena out_arena((KARATSUBA_OUT_ARENA_FACTOR * (A_size + B_size)));
-   Arena sratch_arena((KARATSUBA_SRATCH_ARENA_FACTOR * (A_size + B_size)));
+   const size_t n = std::max(A_size, B_size);
+   Arena out_arena(KARATSUBA_OUT_ARENA_FACTOR * n);
+   Arena sratch_arena(KARATSUBA_SRATCH_ARENA_FACTOR * n);
 
    uint64_t *intermidiate = karatsuba_arena(A_ptr, A_size, B_ptr, B_size, out_arena, sratch_arena);
    memcpy(Res, intermidiate, (A_size + B_size) * sizeof(uint64_t));
