@@ -7,10 +7,10 @@
 class BigInt
 {
  private:
+   std::vector<uint64_t> digits;
    bool is_negative{};
 
  public:
-   std::vector<uint64_t> digits;
    BigInt() = default;
 
    BigInt(const int64_t s);
@@ -32,6 +32,7 @@ class BigInt
  public:
    std::string to_str() const;
    std::string to_vec() const;
+   inline size_t size() { return this->digits.size(); }
 
  public:
    BigInt &operator=(const BigInt &) noexcept = default;
