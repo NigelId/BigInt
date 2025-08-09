@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstring>
+#include <stdexcept>
 
 class Arena
 {
@@ -13,12 +14,25 @@ class Arena
 
    uint64_t *alloc(size_t size)
    {
+      if (size > cap)
+      {
+         throw std::out_of_range("allocating memory outside arena's capacity");
+      }
       uint64_t *ptr = base + offset;
       offset += size;
       return ptr;
    }
+   size_t mark() const { return this->offset; }
+
+   void jump_to(size_t mark)
+   {
+      if (mark > cap)
+      {
+         throw std::out_of_range("jumping to elements outside arena's range");
+      }
+      offset = mark;
+   }
+   uint64_t *now() const { return base; }
    void reset() { offset = 0; }
-   size_t mark() { return this->offset; }
-   void rewind(size_t mark) { offset = mark; }
    ~Arena() { delete[] base; }
 };
