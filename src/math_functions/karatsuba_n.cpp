@@ -1,5 +1,5 @@
 #include "math_functions.hpp"
-
+#include <iostream>
 /* The idea is for karatsuba_n to create an arena, so it can handle memory easier all allocations
  * lives in arena, like z0,z1,z2. Do be noted the pointer that karatsuba_arena will get its data
  * deleted when arena gets out of scope*/
@@ -36,8 +36,8 @@ inline uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, con
    const uint64_t *b_low = B_ptr;
    const uint64_t *b_high = B_ptr + b_low_len;
 
-   const size_t z0_len = a_low_len + b_low_len;
-   const size_t z2_len = a_high_len + b_high_len;
+   size_t z0_len = a_low_len + b_low_len;
+   size_t z2_len = a_high_len + b_high_len;
 
    const size_t result_mark = out_arena.mark();
 
@@ -52,24 +52,32 @@ inline uint64_t *karatsuba_arena(const uint64_t *A_ptr, const size_t A_size, con
       out_arena.jump_to(result_mark);
 
       karatsuba_arena(a_low, a_low_len, b_low, b_low_len, out_arena);
+      z0_len -= !(result[z0_len - 1]);
 
       karatsuba_arena(a_high, a_high_len, b_high, b_high_len, out_arena);
+      z2_len -= !(result[z2_len - 1]);
    }
 
    {
       // step 2 : recursion again and calculate z1 , reusing z0 and z2 from result
 
-      const size_t a_tmp_len = std::max(a_low_len, a_high_len) + 1;
-      const size_t b_tmp_len = std::max(b_low_len, b_high_len) + 1;
+      size_t a_tmp_len = std::max(a_low_len, a_high_len) + 1;
+      size_t b_tmp_len = std::max(b_low_len, b_high_len) + 1;
 
       uint64_t *a_tmp = out_arena.alloc(a_tmp_len);
       add_n(a_tmp, a_low, a_low_len, a_high, a_high_len);
 
+      a_tmp_len -= (!a_tmp[a_tmp_len - 1]);
+
       uint64_t *b_tmp = out_arena.alloc(b_tmp_len);
       add_n(b_tmp, b_low, b_low_len, b_high, b_high_len);
 
+      b_tmp_len -= (!b_tmp[b_tmp_len - 1]);
+      b_tmp_len -= (!b_tmp[b_tmp_len - 1]);
+
       uint64_t *z1 = karatsuba_arena(a_tmp, a_tmp_len, b_tmp, b_tmp_len, out_arena);
-      const size_t z1_len = a_tmp_len + b_tmp_len;
+
+      size_t z1_len = a_tmp_len + b_tmp_len - (!z1[a_tmp_len + b_tmp_len - 1]);
 
       sub_n(z1, z1_len, result, z0_len);
 
