@@ -1,5 +1,4 @@
 #include "math_functions.hpp"
-#include <iostream>
 /* The idea is for karatsuba_n to create an arena, so it can handle memory easier all allocations
  * lives in arena, like z0,z1,z2. Do be noted the pointer that karatsuba_arena will get its data
  * deleted when arena gets out of scope*/
