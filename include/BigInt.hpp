@@ -33,6 +33,16 @@ class BigInt
    std::string to_str() const;
    std::string to_vec() const;
    inline size_t size() { return this->digits.size(); }
+   inline uint64_t bit_length()
+   {
+      uint64_t n = this->digits.size();
+      if (n == 0)
+      {
+         return 0;
+      }
+
+      return (n << 6) - __builtin_clzll(this->digits[n - 1]);
+   }
 
  public:
    BigInt &operator=(const BigInt &) noexcept = default;
